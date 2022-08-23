@@ -6,19 +6,20 @@ class SessionsController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
+    @user = User.find_by(login_params)
 
-    if @user.save
-      redirect_to posts_path
+    if @user
+      session[:user_id] = @user.id
+      redirect_to posts_path, notice: "Welcome, #{@user[:first_name]}!"
     else
-      flash[:alert] = "Couldn't save the User!"
+      flash[:alert] = "Wrong email or password!"
       render :new, status: :unprocessable_entity
     end
   end
 
   private
 
-  def user_params
+  def login_params
     params.require(:user).permit(:email, :password)
   end
 end

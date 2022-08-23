@@ -9,8 +9,7 @@ class RegistrationsController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      redirect_to new_session_path
-      flash[:notice] = "Successfully registered User!"
+      redirect_to new_session_path, notice: "Successfully registered User!"
     else
       flash[:alert] = "Couldn't save the User!"
       render :new, status: :unprocessable_entity
