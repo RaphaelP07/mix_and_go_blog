@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[ show edit update destroy ]
+  before_action :get_user, only: %i[ index my_posts new show create edit update destroy ]
 
   # GET /posts or /posts.json
   def index
@@ -12,16 +13,18 @@ class PostsController < ApplicationController
 
   # GET /posts/new
   def new
+    redirect_to new_session_path, alert: "You need to log in to create a post." unless @user
     @post = Post.new
   end
 
   # GET /posts/1/edit
   def edit
+    redirect_to new_session_path, alert: "You need to log in to edit your post." unless @user
   end
 
   # POST /posts or /posts.json
   def create
-    @post = Post.new(post_params)
+    @post = @user.posts.new(post_params)
 
     respond_to do |format|
       if @post.save
@@ -61,6 +64,10 @@ class PostsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_post
       @post = Post.find(params[:id])
+    end
+
+    def get_user
+      @user = User.find_by(id: session[:user_id])
     end
 
     # Only allow a list of trusted parameters through.

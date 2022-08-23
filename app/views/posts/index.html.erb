@@ -1,6 +1,14 @@
 <h1>Posts</h1>
 
-<%= link_to "New post", new_post_path %>
+<% if @user %>
+  <%= button_to "Sign Out", { :controller => :sessions, :action => 'destroy', :id => @user.id }, :method => :delete %>
+  <br>
+  <%= link_to "New post", new_post_path %>
+<% else %>
+  <%= link_to "Log in", new_session_path %> 
+<% end %>
+
+
 
 <div id="posts">
   <% @posts.each do |post| %>
@@ -8,5 +16,6 @@
     <p>
       <%= link_to "Show this post", post %>
     </p>
+    <br>
   <% end %>
 </div>
